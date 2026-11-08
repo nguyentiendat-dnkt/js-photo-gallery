@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Photo Gallery</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            margin-top: 40px;
+        }
+        /* Khung hiển thị lớn ở trên */
+        #image {
+            width: 500px;
+            height: 300px;
+            border: 5px solid #1a365d;
+            margin: 20px auto;
+            background-color: #cbd5e0;
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            color: #1a365d;
+            font-size: 20px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+        }
+        /* Các ảnh nhỏ bên dưới */
+        .preview {
+            width: 120px;
+            height: 80px;
+            object-fit: cover;
+            margin: 8px;
+            border: 2px solid #2b6cb0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .preview:hover {
+            transform: scale(1.05);
+            border-color: #f6ad55;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Interactive Photo Gallery</h1>
+    
+    <!-- Phần tử ID image yêu cầu bắt buộc -->
+    <div id="image">
+        Hover over an image below to display here.
+    </div>
+
+    <!-- Các ảnh mẫu gắn sẵn sự kiện onmouseover và onmouseout -->
+    <div>
+        <img class="preview" src="https://images.unsplash.com/photo-1543466835-00a7907e9de1" alt="Cute dog running in the park" onmouseover="upDate(this)" onmouseout="undo()">
+        <img class="preview" src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e" alt="Adorable puppy looking up with curiosity" onmouseover="upDate(this)" onmouseout="undo()">
+        <img class="preview" src="https://images.unsplash.com/photo-1537151608828-ea2b11777ee8" alt="Happy dog smiling outdoors in daylight" onmouseover="upDate(this)" onmouseout="undo()">
+    </div>
+
+    <script>
+        /* Hàm xử lý khi rê chuột vào ảnh */
+        function upDate(previewPic) {
+            console.log("Triggered mouseover on:", previewPic.alt, previewPic.src);
+            let imageDiv = document.getElementById("image");
+            imageDiv.innerHTML = previewPic.alt;
+            imageDiv.style.backgroundImage = "url('" + previewPic.src + "')";
+        }
+
+        /* Hàm xử lý khi đưa chuột ra khỏi ảnh */
+        function undo() {
+            let imageDiv = document.getElementById("image");
+            imageDiv.style.backgroundImage = "url('')";
+            imageDiv.innerHTML = "Hover over an image below to display here.";
+        }
+    </script>
+
+</body>
+</html>
