@@ -3,13 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Photo Gallery</title>
+    <title>Accessible Interactive Photo Gallery</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
             background-color: #f4f4f4;
-            margin-top: 40px;
+            margin-top: 30px;
+        }
+        h1 {
+            color: #1a365d;
         }
         /* Khung hiển thị lớn ở trên */
         #image {
@@ -29,49 +32,70 @@
             justify-content: center;
             border-radius: 10px;
         }
-        /* Các ảnh nhỏ bên dưới */
+        /* Khu vực chứa 6 ảnh nhỏ */
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
         .preview {
             width: 120px;
             height: 80px;
             object-fit: cover;
-            margin: 8px;
             border: 2px solid #2b6cb0;
             border-radius: 6px;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: transform 0.2s, border-color 0.2s;
         }
-        .preview:hover {
+        .preview:hover, .preview:focus {
             transform: scale(1.05);
             border-color: #f6ad55;
+            outline: 3px solid #f6ad55; /* Hỗ trợ hiển thị rõ khi focus bằng phím Tab */
         }
     </style>
 </head>
-<body>
+<body onload="addTabIndexes()">
 
     <h1>Interactive Photo Gallery</h1>
     
-    <!-- Phần tử ID image yêu cầu bắt buộc -->
+    <!-- Khung lớn thay đổi theo sự kiện chuột/bàn phím -->
     <div id="image">
         Hover over an image below to display here.
     </div>
 
-    <!-- Các ảnh mẫu gắn sẵn sự kiện onmouseover và onmouseout -->
-    <div>
-        <img class="preview" src="https://images.unsplash.com/photo-1543466835-00a7907e9de1" alt="Cute dog running in the park" onmouseover="upDate(this)" onmouseout="undo()">
-        <img class="preview" src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e" alt="Adorable puppy looking up with curiosity" onmouseover="upDate(this)" onmouseout="undo()">
-        <img class="preview" src="https://images.unsplash.com/photo-1537151608828-ea2b11777ee8" alt="Happy dog smiling outdoors in daylight" onmouseover="upDate(this)" onmouseout="undo()">
+    <!-- 6 ảnh nhỏ với các sự kiện onmouseover, onmouseleave, onfocus, onblur -->
+    <div class="gallery">
+        <img class="preview" src="https://images.unsplash.com/photo-1543466835-00a7907e9de1" alt="Cute dog running in the park" onmouseover="upDate(this)" onmouseleave="undo()" onfocus="upDate(this)" onblur="undo()">
+        <img class="preview" src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e" alt="Adorable puppy looking up with curiosity" onmouseover="upDate(this)" onmouseleave="undo()" onfocus="upDate(this)" onblur="undo()">
+        <img class="preview" src="https://images.unsplash.com/photo-1537151608828-ea2b11777ee8" alt="Happy dog smiling outdoors in daylight" onmouseover="upDate(this)" onmouseleave="undo()" onfocus="upDate(this)" onblur="undo()">
+        <img class="preview" src="https://images.unsplash.com/photo-1552053831-71594a27632d" alt="Golden retriever resting peacefully on grass" onmouseover="upDate(this)" onmouseleave="undo()" onfocus="upDate(this)" onblur="undo()">
+        <img class="preview" src="https://images.unsplash.com/photo-1587300003388-59208cc962cb" alt="Playful puppy catching a toy outdoors" onmouseover="upDate(this)" onmouseleave="undo()" onfocus="upDate(this)" onblur="undo()">
+        <img class="preview" src="https://images.unsplash.com/photo-1517849845537-4d257902454a" alt="Cute dog looking directly at the camera" onmouseover="upDate(this)" onmouseleave="undo()" onfocus="upDate(this)" onblur="undo()">
     </div>
 
     <script>
-        /* Hàm xử lý khi rê chuột vào ảnh */
+        /* 1. Hàm tự động thêm thuộc tính tabindex bằng vòng lặp khi trang load xong */
+        function addTabIndexes() {
+            console.log("Page loaded. Adding tabindex attributes dynamically.");
+            let images = document.querySelectorAll(".preview");
+            for (let i = 0; i < images.length; i++) {
+                images[i].setAttribute("tabindex", i + 1);
+                console.log("Added tabindex " + (i + 1) + " to image " + (i + 1));
+            }
+        }
+
+        /* 2. Hàm xử lý khi rê chuột vào hoặc focus bằng bàn phím */
         function upDate(previewPic) {
-            console.log("Triggered mouseover on:", previewPic.alt, previewPic.src);
+            console.log("Triggered active event on:", previewPic.alt, previewPic.src);
             let imageDiv = document.getElementById("image");
             imageDiv.innerHTML = previewPic.alt;
             imageDiv.style.backgroundImage = "url('" + previewPic.src + "')";
         }
 
-        /* Hàm xử lý khi đưa chuột ra khỏi ảnh */
+        /* 3. Hàm xử lý khi rời chuột hoặc blur (mất focus) */
         function undo() {
             let imageDiv = document.getElementById("image");
             imageDiv.style.backgroundImage = "url('')";
